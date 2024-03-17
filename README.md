@@ -334,6 +334,52 @@ Alarm rules are provisioned to trigger alerts:
 
 By implementing these monitoring strategies and response procedures, the operational efficiency of the AKS cluster is maintained, ensuring smooth operation and prompt issue resolution.
 
+## Secrets Management and AKS Integration with Azure Key Vault
+
+To enhance security and adhere to best practices, the project repository implements a solution for securely storing and retrieving sensitive database credentials using Azure Key Vault. Below are the details of the setup and integration:
+
+### Azure Key Vault Setup
+1. **Key Vault Creation:**
+   - Azure Key Vault was created to securely store sensitive information such as database credentials.
+   - Key Vault URI was then obtained, which serves as the unique address for accessing and interacting with resources stored within the Key Vault.
+
+2. **Assign Permissions:**
+   - Key Vault Administrator role was assigned to the Microsoft Enterprise ID user to grant necessary permissions for managing secrets within the Key Vault.
+   - Key Vault Administrator: Grants full control over the Key Vault, enabling management of access policies and configurations.
+
+3. **Adding Secrets:**
+   - Four secrets were created in the Key Vault to secure database credentials used by the application: server name, username, password, and database name.
+
+### AKS Integration with Azure Key Vault
+
+4. **Managed Identity for AKS:**
+   - Managed identity was enabled for the AKS cluster to allow secure authentication and interaction with the Key Vault.
+   - Azure CLI commands were used to enable managed identity for the AKS cluster and retrieve information about the created managed identity such as `clientId` under identityProfile.
+   - Commands include: `az aks update --resource-group <resource-group> --name <aks-cluster-name> --enable-managed-identity` & `az aks show --resource-group <resource-group> --name <aks-cluster-name> --query identityProfile`
+
+5. **Role-Based Access Control (RBAC):**
+   - The Key Vault Secrets Officer role is assigned to the managed identity associated with AKS using the `az role assignment create --role "Key Vault Secrets Officer" \ 
+--assignee <managed-identity-client-id> \
+--scope /subscriptions/{subscription-id}/resourceGroups/{resource-group}/providers/Microsoft.KeyVault/vaults/{key-vault-name}` command.
+   - This role grants permissions to read, list, set, and delete secrets within the specified Azure Key Vault, enabling AKS to securely retrieve and manage secrets.
+
+### Application Code Modifications
+
+6. **Update Application Code:**
+   - The azure-identity and Azure-Key-Vault libraries were integrated into the Python application code to enable communication with Azure Key Vault.
+   - The code was also modified to use managed identity credentials for securely retrieving database connection details from the Key Vault.
+   - The requirements file was then updated for the application's Docker image to include the newly required libraries.
+
+### Testing and Validation
+
+7. **Testing:**
+   - The modified application was thoroughly tested locally to ensure seamless integration with Azure Key Vault.
+   - Then it was verified that the application securely retrieves and utilizes database connection details from Key Vault using managed identity credentials.
+
+8. **Deployment:**
+   - The modified application was deployed using the pre-established Azure DevOps CI/CD pipeline.
+   - End-to-end testing was conducted within the AKS environment to validate the functionality of the application, ensuring secure access to Key Vault secrets directly from the CI/CD pipeline.
+
 
 ## Contributors 
 
