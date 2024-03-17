@@ -251,6 +251,26 @@ To distribute the application company-wide, consider using Ingress. Ingress cont
 On the other hand, if the application was customer-facing rather than for internal use, using a Load Balancer service would be the preferred choice. This setup is especially suitable when serving the application to a broader audience, such as a public website or a customer portal.
 
 
+## CI/CD Pipeline Documentation
+
+### Overview
+This project repository is configured with a comprehensive CI/CD pipeline using Azure DevOps. The pipeline automates both the containerization and deployment process, ensuring that every new feature added to the project triggers the automatic build of an updated Docker image, its release to Docker Hub, and the deployment of the updated containers to the Kubernetes cluster hosted on Azure Kubernetes Service (AKS).
+
+### Pipeline Configuration Tasks
+The tasks completed to configure the pipeline are as follows:
+1. **Creation of Azure DevOps Project**: A new Azure DevOps project was created to host the CI/CD pipeline.
+2. **Source Control Configuration**: GitHub was selected as the source control system, and the application code hosted in this repository was linked to the Azure DevOps project.
+3. **Integration with Docker Hub**: A service connection is established between Azure DevOps and Docker Hub, enabling seamless integration with the Docker Hub container registry.
+4. **Build Pipeline**: The build pipeline is set up to automatically run on each push to the main branch of this repository. It utilizes a Docker task with the `buildandPush` command to build and push a Docker image to Docker Hub.
+5. **Integration with AKS**: A service connection is configured between Azure DevOps and AKS to facilitate secure deployments and effective management of applications on the Kubernetes cluster.
+6. **Release Pipeline**: The release pipeline incorporates the `Deploy to Kubernetes` task with the `deploy` kubectl command to deploy the application to the AKS cluster automatically. It is triggered after the successful completion of the build pipeline.
+7. **Testing and Validation**: The functionality of the CI/CD pipeline was tested by monitoring pod status and testing application functionality post-deployment.
+### Validation Steps
+After configuring the CI/CD pipeline, the following validation steps were performed:
+1. **Monitoring Pod Status**: The status of pods within the AKS cluster was monitored using the command `kubectl get pods` to confirm correct creation and deployment.
+2. **Testing Functionality**: Port forwarding was initiated using `kubectl port-forward <pod-name> 5000:5000` to access the application running on AKS securely. The functionality of the application was tested to ensure it operates correctly post-deployment.
+
+
 
 ## Contributors 
 
