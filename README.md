@@ -270,6 +270,69 @@ After configuring the CI/CD pipeline, the following validation steps were perfor
 1. **Monitoring Pod Status**: The status of pods within the AKS cluster was monitored using the command `kubectl get pods` to confirm correct creation and deployment.
 2. **Testing Functionality**: Port forwarding was initiated using `kubectl port-forward <pod-name> 5000:5000` to access the application running on AKS securely. The functionality of the application was tested to ensure it operates correctly post-deployment.
 
+# Include screenshots to enhance clarity!!!!!!!!!!!!!!!!!!!!!!!
+
+## Monitoring Strategy for AKS Cluster
+
+Comprehensive monitoring strategies were implemented to ensure effective monitoring and alerting for the AKS cluster. Below are the details of the strategies:
+
+### Metrics Explorer Charts
+
+Several Metrics Explorer charts are used to monitor the AKS cluster:
+
+1. **Average Node CPU Usage:**
+   - This chart tracks the CPU usage of the AKS cluster's nodes.
+   - Significance: Helps ensure efficient resource allocation and detect potential performance issues.
+   - ![Screenshot](insert_screenshot_average_node_cpu_usage.png)
+
+2. **Average Pod Count:**
+   - Displays the average number of pods running in the AKS cluster.
+   - Significance: Key metric for evaluating the cluster's capacity and workload distribution.
+   - ![Screenshot](insert_screenshot_average_pod_count.png)
+
+3. **Used Disk Percentage:**
+   - Monitors disk usage to prevent storage-related issues.
+   - Significance: Tracks how much disk space is being utilized.
+   - ![Screenshot](insert_screenshot_used_disk_percentage.png)
+
+4. **Bytes Read and Written per Second:**
+   - Provides insights into data I/O rates.
+   - Significance: Helps identify potential performance bottlenecks.
+   - ![Screenshot](insert_screenshot_bytes_read_written.png)
+
+### Log Analytics
+Various logs are analysed through Log Analytics:
+
+1. **Average Node CPU Usage Percentage per Minute**
+   - Significance: Tracks the CPU usage percentage at the node level over time. Monitoring CPU usage at a granular level helps detect performance anomalies, identify resource-intensive workloads, and optimize resource allocation. High CPU usage may indicate workload spikes, inefficient resource utilization, or performance bottlenecks.
+
+2. **Average Node Memory Usage Percentage per Minute**
+   - Significance: Monitors the memory usage percentage at the node level over time. Tracking memory usage helps identify memory-intensive applications or workloads, detect memory leaks, and optimize memory allocation. High memory usage may lead to performance degradation, out-of-memory errors, or application crashes.
+
+3. **Pods Counts with Phase**
+   - Significance: Provides information on the pod count with different phases (e.g., pending, running, terminating). Monitoring pod lifecycle phases helps ensure the smooth operation of workloads, and identify stuck or pending pods. Anomalies in pod counts may indicate deployment failures, resource constraints, or scheduling issues.
+
+4. **Find Warning Value in Container Logs**
+   - Significance: Searches for `warning` values in container logs to proactively detect issues or errors within containers. Monitoring container logs helps identify application errors, runtime issues, or misconfigurations, enabling prompt troubleshooting and issue resolution. Detecting warning messages helps mitigate potential service disruptions, data corruption, or application failures.
+
+5. **Monitoring Kubernetes Events**
+   - Significance: Tracks Kubernetes events related to pod scheduling, scaling activities, and errors. Monitoring Kubernetes events provides insights into cluster operations, identifies infrastructure changes, and helps maintain cluster stability and reliability. Monitoring events helps detect and respond to pod failures, node issues, or configuration changes, ensuring continuous operation and optimal performance of the AKS cluster.
+
+### Alarm Configurations
+Alarm rules are provisioned to trigger alerts:
+
+1. **Used Disk Percentage Alert:**
+   - Triggers an alarm when the used disk percentage exceeds 90%.
+   - Configuration: Checks every 5 minutes with a loopback period of 15 minutes.
+   - Significance: Proactively detects and addresses potential disk issues.
+    - Response: Investigate the root cause of high disk usage and consider scaling storage resources or optimizing data storage.
+   
+2. **CPU and Memory Usage Alerts:**
+   - Alerts trigger when CPU or memory usage exceeds 80%.
+   - Configuration: Ensures notification when critical resource levels are approached.
+    - Response: Assess application resource demands and consider scaling resources or optimizing application performance.
+
+By implementing these monitoring strategies and response procedures, the operational efficiency of the AKS cluster is maintained, ensuring smooth operation and prompt issue resolution.
 
 
 ## Contributors 
