@@ -83,8 +83,8 @@ When interacting with the backend database, developers should ensure that the de
 ### Conclusion
 The delivery date feature enhances the company's internal application by allowing users to track and manage delivery dates for orders efficiently. By following the outlined guidelines, both end users and developers can leverage this functionality effectively to streamline order fulfilment processes and improve overall operational efficiency.
 
-## Containerization With Docker<br />
-### Containerization Process
+## Containerisation With Docker<br />
+### Containerisation Process
 1.	Initially, a `Dockerfile` was created, and then an official Python runtime was chosen as the parent image. `Python:3.8-slim` is utilised for this application since it's a good choice for a Flask application.
 1.	Next the working directory was set to `/app` using the `WORKDIR` instruction, as it is a commonly used directory for web applications.
 1.	The `COPY` instruction was then used to copy the contents of the local directory into the container's `/app` directory. This ensures the files and application code are available inside the container.
@@ -97,7 +97,7 @@ The delivery date feature enhances the company's internal application by allowin
 ### Docker Commands
 1.	Firstly the Docker image is built by running the following command: `docker build -t {name of the image} .`.
 1.	Then, the Docker container was run locally to ensure the application functions correctly within the containerised environment. This is done using the following command: `docker run -p 5000:5000 {name of the image}`. This maps port 5000 from the local machine to the container, enabling access to the containerised application through the web browser at `http://127.0.0.1:5000`.
-1.	Next the the Docker image is tagged with the relevant information. Specifying the image name, version, and Docker Hub repository in the following format: `docker tag {name of the image} {docker-hub-username}/{image-name}:{tag}`
+1.	Next the Docker image is tagged with the relevant information. Specifying the image name, version, and Docker Hub repository in the following format: `docker tag {name of the image} {docker-hub-username}/{image-name}:{tag}`
 1.	Then the docker push command was used to upload the Docker image to Docker Hub: `docker push {docker-hub-username}/{image-name}:{tag}`
 1.	Lastly, the Docker Hub account was used to confirm that the Docker image is listed within the repository. Then the accessibility was tested by pulling the image from Docker Hub.
 
@@ -110,12 +110,12 @@ Tags: latest
 ## Defining Networking Services With IaC.
 This documentation outlines the process of defining networking services using Infrastructure as Code (IaC) with Terraform. This is done to deploy a containerised application on a Kubernetes cluster (to ensure the application's scalability). The focus will be on provisioning Azure networking services for the Azure Kubernetes Service (AKS) cluster. 
 
-1. **Initializing the Terraform project** with the name `aks-terraform`. The project was organised into two modules: `networking-module` and `aks-cluster-module`.
+1. **Initialising the Terraform project** with the name `aks-terraform`. The project was organised into two modules: `networking-module` and `aks-cluster-module`.
 1. **Defining input variables**: inside the `networking-module` directory, a `variables.tf` file was created to define input variables for the module. These variables include *resource_group_name*, *location*, and *vnet_address_space*.
 1. **Defining Networking Resources**: In the `networking-module` directory, a `main.tf` file was created to define essential networking resources. These resources include *Azure Resource Group*, *Virtual Network* (VNet), *Control Plane Subnet*, *Worker Node Subnet*, and *Network Security Group* (NSG).
 1. **Defining NSG Inbound Rules**: Rules were then added to the *Network Security Group* to allow traffic to *kube-apiserver* and *SSH* from the public IP address. These rules are crucial for the successful provisioning of the AKS cluster and ensuring its security.
 1. **Defining Output Variables**: An `outputs.tf` file was then created to define output variables for the networking module. These variables include *vnet_id*, *control_plane_subnet_id*, *worker_node_subnet_id*, *networking_resource_group_name*, and *aks_nsg_id*.
-1. **Initializing the Networking Module**: Lastly, the terraform initialisation command was run in the `networking-module`. This initialises the networking module, making it ready for use within the main project.
+1. **Initialising the Networking Module**: Lastly, the terraform initialisation command was run in the `networking-module`. This initialises the networking module, making it ready for use within the main project.
 
 ### Dependencies
 Dependencies ensure that resources are provisioned in the right order within the networking module. The *Azure Resource Group* (RG) is the parent resource,  whereas the *Virtual Network* (VNet) depends on the *RG* for deployment location. As both the *Control Plane* and *Worker Node Subnets* are sub-resources they depend on the *VNet*. The *Network Security Group* (NSG) relies on the *RG* for deployment location and implicitly on the creation of *subnets* within the *VNet*. The *NSG's* presence is a requirement for *NSG Inbound Rules*. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
@@ -154,7 +154,7 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
 2. **Defining Input Variables**: In the `variables.tf` file, both the `client_id` and `client_secret` input variables were defined. These variables will store the credentials required for authenticating Terraform with Azure. The variables were also marked as sensitive to prevent accidental exposure of sensitive information.
 
 ### Provider Configuration
-1. **Creating Main Configuration File**: In the `aks-terraform` directory,a `main.tf` file was created.
+1. **Creating Main Configuration File**: In the `aks-terraform` directory, a `main.tf` file was created.
 2. **Azure Provider Block**: Within `main.tf`, the Azure provider block was defined to enable authentication with Azure using the service principal credentials variables created previously. The required provider configuration details such as `subscription_id` and `tenant_id` were included.
 
 ### Integration of Networking Module
@@ -220,14 +220,14 @@ On the other hand, if the application was customer-facing rather than for intern
 ## CI/CD Pipeline Documentation
 
 ### Overview
-This project repository was configured with a comprehensive CI/CD pipeline using Azure DevOps. The pipeline automates both the containerization and deployment process, ensuring that every new feature added to the project triggers the automatic build of an updated Docker image, its release to Docker Hub, and the deployment of the updated containers to the Kubernetes cluster hosted on Azure Kubernetes Service (AKS).
+This project repository was configured with a comprehensive CI/CD pipeline using Azure DevOps. The pipeline automates both the containerisation and deployment process, ensuring that every new feature added to the project triggers the automatic build of an updated Docker image, its release to Docker Hub, and the deployment of the updated containers to the Kubernetes cluster hosted on Azure Kubernetes Service (AKS).
 
 ### Pipeline Configuration Tasks
 The tasks completed to configure the pipeline are as follows:
 1. **Creation of Azure DevOps Project**: A new Azure DevOps project was created to host the CI/CD pipeline.
 2. **Source Control Configuration**: GitHub was selected as the source control system, and the application code hosted in this repository was linked to the Azure DevOps project.
 3. **Integration with Docker Hub**: A service connection is established between Azure DevOps and Docker Hub, enabling seamless integration with the Docker Hub container registry.
-4. **Build Pipeline**: The build pipeline is set up to automatically run on each push to the main branch of this repository. It utilizes a Docker task with the `buildandPush` command to build and push a Docker image to Docker Hub.
+4. **Build Pipeline**: The build pipeline is set up to automatically run on each push to the main branch of this repository. It utilises a Docker task with the `buildandPush` command to build and push a Docker image to Docker Hub.
 5. **Integration with AKS**: A service connection is configured between Azure DevOps and AKS to facilitate secure deployments and effective management of applications on the Kubernetes cluster.
 6. **Release Pipeline**: The release pipeline incorporates the `Deploy to Kubernetes` task with the `deploy` kubectl command to deploy the application to the AKS cluster automatically. It is triggered after the successful completion of the build pipeline.
 7. **Testing and Validation**: The functionality of the CI/CD pipeline was tested by monitoring pod status and testing application functionality post-deployment.
@@ -258,7 +258,7 @@ Several Metrics Explorer charts are used to monitor the AKS cluster:
 
 3. **Used Disk Percentage:**
    - Monitors disk usage to prevent storage-related issues.
-   - Significance: Tracks how much disk space is being utilized.
+   - Significance: Tracks how much disk space is being utilised.
    - ![Screenshot](insert_screenshot_used_disk_percentage.png)
 
 4. **Bytes Read and Written per Second:**
@@ -270,10 +270,10 @@ Several Metrics Explorer charts are used to monitor the AKS cluster:
 Various logs are analysed through Log Analytics:
 
 1. **Average Node CPU Usage Percentage per Minute**
-   - Significance: Tracks the CPU usage percentage at the node level over time. Monitoring CPU usage at a granular level helps detect performance anomalies, identify resource-intensive workloads, and optimize resource allocation. High CPU usage may indicate workload spikes, inefficient resource utilization, or performance bottlenecks.
+   - Significance: Tracks the CPU usage percentage at the node level over time. Monitoring CPU usage at a granular level helps detect performance anomalies, identify resource-intensive workloads, and optimise resource allocation. High CPU usage may indicate workload spikes, inefficient resource utilisation, or performance bottlenecks.
 
 2. **Average Node Memory Usage Percentage per Minute**
-   - Significance: Monitors the memory usage percentage at the node level over time. Tracking memory usage helps identify memory-intensive applications or workloads, detect memory leaks, and optimize memory allocation. High memory usage may lead to performance degradation, out-of-memory errors, or application crashes.
+   - Significance: Monitors the memory usage percentage at the node level over time. Tracking memory usage helps identify memory-intensive applications or workloads, detect memory leaks, and optimise memory allocation. High memory usage may lead to performance degradation, out-of-memory errors, or application crashes.
 
 3. **Pods Counts with Phase**
    - Significance: Provides information on the pod count with different phases (e.g., pending, running, terminating). Monitoring pod lifecycle phases helps ensure the smooth operation of workloads, and identify stuck or pending pods. Anomalies in pod counts may indicate deployment failures, resource constraints, or scheduling issues.
@@ -291,12 +291,12 @@ Alarm rules are provisioned to trigger alerts:
    - Triggers an alarm when the used disk percentage exceeds 90%.
    - Configuration: Checks every 5 minutes with a loopback period of 15 minutes.
    - Significance: Proactively detects and addresses potential disk issues.
-    - Response: Investigate the root cause of high disk usage and consider scaling storage resources or optimizing data storage.
+    - Response: Investigate the root cause of high disk usage and consider scaling storage resources or optimising data storage.
    
 2. **CPU and Memory Usage Alerts:**
    - Alerts trigger when CPU or memory usage exceeds 80%.
    - Configuration: Ensures notification when critical resource levels are approached.
-    - Response: Assess application resource demands and consider scaling resources or optimizing application performance.
+    - Response: Assess application resource demands and consider scaling resources or optimising application performance.
 
 By implementing these monitoring strategies and response procedures, the operational efficiency of the AKS cluster is maintained, ensuring smooth operation and prompt issue resolution.
 
@@ -340,7 +340,7 @@ To enhance security and adhere to best practices, the project repository impleme
 
 7. **Testing:**
    - The modified application was thoroughly tested locally to ensure seamless integration with Azure Key Vault.
-   - Then it was verified that the application securely retrieves and utilizes database connection details from Key Vault using managed identity credentials.
+   - Then it was verified that the application securely retrieves and utilises database connection details from Key Vault using managed identity credentials.
 
 8. **Deployment:**
    - The modified application was deployed using the pre-established Azure DevOps CI/CD pipeline.
