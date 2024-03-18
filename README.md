@@ -26,39 +26,6 @@ Welcome to the Web App DevOps Project repo! This application allows you to effic
 
 - **Data Validation:** Ensure data accuracy and completeness with required fields, date restrictions, and card number validation.
 
- ## New 'Delivery Date' Feature
-
-**Overview**<br />
-The delivery date feature is a new functionality added to the company's internal application. This feature allows the addition of a new field in the delivery tracking software. Although the feature has been reverted for the time being, its functionality is documented here for potential future reimplementation.
-
-**Purpose**<br />
-The delivery date function is intended to improve delivery management within the company's internal application in terms of accuracy and efficiency. Delivery dates can be added to the tracking system to help users better plan and track order fulfilment, leading to improved customer satisfaction and operational effectiveness.
-
-**Backend Integration**<br />
-To store delivery dates for orders, a new column called delivery_date has been incorporated in the backend Azure SQL Database.
-
-**Usage**<br />
-
-*End Users*<br />
-
-Adding a Delivery Date to an Order
-1.	Navigate to the Add New Order page within the application.
-1.	Fill in the necessary order details, including product information and customer details.
-1.	Locate the "Delivery Date" field and select or enter the desired delivery date.
-1.	Complete the order creation by pressing ‘Add Order’.<br />
-
-Viewing Delivery Date for an Order
-1.	Navigate to the Order List page within the application.
-1.	Look for the "Delivery Date" field to view the scheduled delivery date for the order.
-
-*Developers*<br />
-Database Interaction<br />
-When interacting with the backend database, developers should ensure that the delivery_date column is properly handled in SQL queries and data manipulation operations.<br />
-
-**Conclusion**<br />
-The delivery date feature enhances the company's internal application by allowing users to track and manage delivery dates for orders efficiently. By following the outlined guidelines, both end users and developers can leverage this functionality effectively to streamline order fulfilment processes and improve overall operational efficiency.
-
-
 ## Getting Started
 
 ### Prerequisites
@@ -86,106 +53,105 @@ To run the application, you simply need to run the `app.py` script in this repos
 
 - **Database:** The application employs an Azure SQL Database as its database system to store order-related data.
 
-## New 'Delivery Date' Feature
+ ## New 'Delivery Date' Feature
 
-**Overview**<br />
-The delivery date feature is a new functionality added to the company's internal application. This feature allows the addition of a new field in the delivery tracking software. Although the feature has been reverted for the time being, its functionality is documented here for potential future reimplementation.
+### Overview
+The delivery date feature is a new functionality added to the company's internal application. This feature allows the addition of a new field in the delivery tracking software. Although the feature has been reverted for the time being, its functionality is documented here for potential future implementation.
 
-**Purpose**<br />
+### Purpose
 The delivery date function is intended to improve delivery management within the company's internal application in terms of accuracy and efficiency. Delivery dates can be added to the tracking system to help users better plan and track order fulfilment, leading to improved customer satisfaction and operational effectiveness.
 
-**Backend Integration**<br />
+### Backend Integration
 To store delivery dates for orders, a new column called delivery_date has been incorporated in the backend Azure SQL Database.
 
-**Usage**<br />
-
-*End Users*<br />
-
-Adding a Delivery Date to an Order
+### Usage
+#### End Users
+*Adding a Delivery Date to an Order*
 1.	Navigate to the Add New Order page within the application.
 1.	Fill in the necessary order details, including product information and customer details.
 1.	Locate the "Delivery Date" field and select or enter the desired delivery date.
 1.	Complete the order creation by pressing ‘Add Order’.<br />
 
-Viewing Delivery Date for an Order
+*Viewing Delivery Date for an Order*
 1.	Navigate to the Order List page within the application.
 1.	Look for the "Delivery Date" field to view the scheduled delivery date for the order.
 
-*Developers*<br />
-
+#### Developers
 Database Interaction<br />
 When interacting with the backend database, developers should ensure that the delivery_date column is properly handled in SQL queries and data manipulation operations.<br />
 
-**Conclusion**<br />
+### Conclusion
 The delivery date feature enhances the company's internal application by allowing users to track and manage delivery dates for orders efficiently. By following the outlined guidelines, both end users and developers can leverage this functionality effectively to streamline order fulfilment processes and improve overall operational efficiency.
 
 ## Containerization With Docker<br />
-**Containerization Process**
-1.	Start by creating a Dockerfile 
-1.	Next choose an official Python runtime as the parent image. We'll utilise Python:3.8-slim for this application since it's a good choice for a Flask application.
-1.	Then set the working directory. Use the WORKDIR instruction to set the working directory in the container. Set it to /app, a commonly used directory for web applications.
-1.	Copy the application files. To copy the contents of your local directory into the container's /app directory, use the COPY instruction. This ensures the files and application code are available inside the container.
-1.	Install system dependencies and the ODBC driver required for database connectivity. Also, update the package lists (apt-get update) and then install packages (apt-get install). Then download and add the Microsoft GPG key and repository for installing the MS SQL Server ODBC driver. Finally, clean up unnecessary files (apt-get purge, apt-get clean).
-1.	Upgrade pip and setuptools to their latest versions using pip. To ensure that the latest versions of these tools are available for installing Python packages.
-1.	 Now install the Python packages specified in your requirements.txt file. This file should contain all the packages necessary for running the application successfully.
-1.	To make your Flask application accessible from outside the container, specify that port 5000 should be exposed.
-1.	Use the CMD instruction to specify the command that runs the file that starts the Flask application when the container launches.
+### Containerization Process
+1.	Initially, a `Dockerfile` was created, and then an official Python runtime was chosen as the parent image. `Python:3.8-slim` is utilised for this application since it's a good choice for a Flask application.
+1.	Next the working directory was set to `/app` using the `WORKDIR` instruction, as it is a commonly used directory for web applications.
+1.	The `COPY` instruction was then used to copy the contents of the local directory into the container's `/app` directory. This ensures the files and application code are available inside the container.
+1.	Following on, the system dependencies and the ODBC driver required for database connectivity need to be installed. Furthermore, the package lists also have to be updated and installed using `apt-get update` followed by `apt-get install`. The Microsoft GPG key and repository have to then be downloaded and added to install the MS SQL Server ODBC driver. Finally, clean up unnecessary files `apt-get purge`, `apt-get clean`.
+1.	Pip is then needed to upgrade pip and setuptools to their latest versions. To ensure that the latest versions of these tools are available for installing Python packages.
+1.	 The Python packages specified in the `requirements.txt` file need to be installed next. This file should contain all the packages necessary for running the application successfully.
+1.	To make the Flask application accessible from outside the container, `port 5000` should be exposed.
+1.	Finally the `CMD` instruction is used to specify the command that runs the file, which then starts the Flask application when the container launches.
 
-**Docker Commands**
-1.	First build the Docker image by running the following command: *docker build -t {name of the image} .*
-1.	Run a Docker container locally to ensure the application functions correctly within the containerised environment. Execute the following command: *docker run -p 5000:5000 {name of the image}*. This maps port 5000 from your local machine to the container, enabling access to the containerised application through the web browser at *http://127.0.0.1:5000*.
-1.	Tag your Docker image with the relevant information. Specify the image name, version, and Docker Hub repository in the following format: *docker tag {name of the image} {docker-hub-username}/{image-name}:{tag}*
-1.	Login into your Docker Hub account and use the docker push command to upload the Docker image to Docker Hub: *docker push {docker-hub-username}/{image-name}:{tag}*
-1.	Log in to your Docker Hub account and confirm that your Docker image is listed within your repository. You can test pulling the image from Docker Hub to ensure that it's accessible.
+### Docker Commands
+1.	Firstly the Docker image is built by running the following command: `docker build -t {name of the image} .`.
+1.	Then, the Docker container was run locally to ensure the application functions correctly within the containerised environment. This is done using the following command: `docker run -p 5000:5000 {name of the image}`. This maps port 5000 from the local machine to the container, enabling access to the containerised application through the web browser at `http://127.0.0.1:5000`.
+1.	Next the the Docker image is tagged with the relevant information. Specifying the image name, version, and Docker Hub repository in the following format: `docker tag {name of the image} {docker-hub-username}/{image-name}:{tag}`
+1.	Then the docker push command was used to upload the Docker image to Docker Hub: `docker push {docker-hub-username}/{image-name}:{tag}`
+1.	Lastly, the Docker Hub account was used to confirm that the Docker image is listed within the repository. Then the accessibility was tested by pulling the image from Docker Hub.
 
-**Docker Image Information**
+### Docker Image Information
 
 Name: liban45/test-web-app
 
-Tags: v1
+Tags: latest
 
 ## Defining Networking Services With IaC.
-This documentation outlines the process of defining networking services using Infrastructure as Code (IaC) with Terraform. This is done to deploy a containerised application on a Kubernetes cluster (to ensure the application's scalability). The focus will be on provisioning Azure networking services for the Azure Kubernetes Service (AKS) cluster. We will detail the steps for defining and provisioning the networking module.
+This documentation outlines the process of defining networking services using Infrastructure as Code (IaC) with Terraform. This is done to deploy a containerised application on a Kubernetes cluster (to ensure the application's scalability). The focus will be on provisioning Azure networking services for the Azure Kubernetes Service (AKS) cluster. 
 
-1. **Initialize your Terraform project** with the name *aks-terraform*. Organise the project into two modules: *networking-module* and *aks-cluster-module*.
-1. **Define input variables**: inside the *networking-module* directory, create a *variables.tf* file to define input variables for the module. These variables include resource_group_name, location, and vnet_address_space.
-1. **Define Networking Resources**: In the *networking-module* directory, create a *main.tf* file to define essential networking resources. These resources include Azure Resource Group, Virtual Network (VNet), Control Plane Subnet, Worker Node Subnet, and Network Security Group (NSG).
-1. **Define NSG Inbound Rules**: Add rules to the Network Security Group (NSG) to allow traffic to kube-apiserver and SSH from your public IP address. These rules are crucial for the successful provisioning of the AKS cluster and ensuring its security.
-1. **Define Output Variables**: Create an *outputs.tf* file to define output variables for the networking module. These variables include vnet_id, control_plane_subnet_id, worker_node_subnet_id, networking_resource_group_name, and aks_nsg_id.
-1.**Initialize the Networking Module**: In the *networking-module* run the terraform initialization command. This initialises the networking module, making it ready for use within the main project.
+1. **Initializing the Terraform project** with the name `aks-terraform`. The project was organised into two modules: `networking-module` and `aks-cluster-module`.
+1. **Defining input variables**: inside the `networking-module` directory, a `variables.tf` file was created to define input variables for the module. These variables include *resource_group_name*, *location*, and *vnet_address_space*.
+1. **Defining Networking Resources**: In the `networking-module` directory, a `main.tf` file was created to define essential networking resources. These resources include *Azure Resource Group*, *Virtual Network* (VNet), *Control Plane Subnet*, *Worker Node Subnet*, and *Network Security Group* (NSG).
+1. **Defining NSG Inbound Rules**: Rules were then added to the *Network Security Group* to allow traffic to *kube-apiserver* and *SSH* from the public IP address. These rules are crucial for the successful provisioning of the AKS cluster and ensuring its security.
+1. **Defining Output Variables**: An `outputs.tf` file was then created to define output variables for the networking module. These variables include *vnet_id*, *control_plane_subnet_id*, *worker_node_subnet_id*, *networking_resource_group_name*, and *aks_nsg_id*.
+1. **Initializing the Networking Module**: Lastly, the terraform initialisation command was run in the `networking-module`. This initialises the networking module, making it ready for use within the main project.
 
-__*Dependencies*__ ensure that resources are provisioned in the right order within the networking module. The Azure Resource Group (RG) is the parent resource,  whereas the Virtual Network (VNet) depends on the RG for deployment location. As both the Control Plane and Worker Node Subnets are sub-resources they depend on the VNet. The Network Security Group (NSG) relies on the RG for deployment location and implicitly on the creation of subnets within the VNet. The NSG's presence is a requirement for NSG Inbound Rules. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
+### Dependencies
+Dependencies ensure that resources are provisioned in the right order within the networking module. The *Azure Resource Group* (RG) is the parent resource,  whereas the *Virtual Network* (VNet) depends on the *RG* for deployment location. As both the *Control Plane* and *Worker Node Subnets* are sub-resources they depend on the *VNet*. The *Network Security Group* (NSG) relies on the *RG* for deployment location and implicitly on the creation of *subnets* within the *VNet*. The *NSG's* presence is a requirement for *NSG Inbound Rules*. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
 
 ## Provisioning an Azure Kubernetes Service (AKS) cluster with IaC.
 
-The process involves defining input and output variables, configuring Azure resources, and initialising the cluster module for use within the main project.<br />
+This process involves defining input and output variables, configuring Azure resources, and initialising the cluster module for use within the main project.
 
-**Define Input Variables**: 
-1. Create *variables.tf* file in the cluster module directory. 
-1. Define input variables for AKS cluster customisation, including name, location, DNS prefix, Kubernetes version, service principal ID and secret. 
-1. Make sure to include the output variables from the networking module as the networking module plays an important role in establishing the networking resources for the AKS cluster. 
-1. Ensure a unique Service Principal name is used to prevent permission conflicts.<br />
+### Defining Input Variables 
+1. A `variables.tf` file was first created in the `aks-cluster-module` directory. 
+1. Input variables were then defined for AKS cluster customisation, including *name*, *location*, *DNS prefix*, *Kubernetes version*, *service principal ID* and *secret*. 
+1. The output variables from the networking module were included as the `networking-module` plays an important role in establishing the networking resources for the AKS cluster. 
+1. A unique Service Principal name was used to prevent permission conflicts.
 
-**Configure Azure Resources**:
-1. Create *main.tf* file, use input variables to set up AKS cluster resources such as name, location, DNS prefix, and Kubernetes version.
-1. Define default node pool settings, including node count, VM size, and auto-scaling parameters.
-1. Specify service principal authentication details.<br />
+### Configuring Azure Resources
+1. A `main.tf` file was used to input variables to set up AKS cluster resources such as *name*, *location*, *DNS prefix*, and *Kubernetes version*.
+1. Default node pool settings were then defined, including *node count*, *VM size*, and *auto-scaling* parameters.
+1. Lastly, service principal authentication details were specified.<br />
 
 
-**Define Output Variables**: Create *outputs.tf* file to define output variables storing cluster name, ID, and Kubernetes configuration file.<br />
+### Defining Output Variables
+In an `outputs.tf` file output variables were defined to store *cluster name*, *ID*, and *Kubernetes configuration file*.
 
-**Initialize Cluster Module**: Navigate to the aks-cluster-module directory and initialize for use within the main project.<br />
+### Initialising Cluster Module
+The `aks-cluster-module` directory was then initialised for use within the main project.
 
-Following these steps ensures automated provisioning of an AKS cluster using Terraform, promoting consistency and reproducibility in infrastructure deployment.
+These steps ensured the AKS clusters automated provisioning using Terraform, promoting consistency and reproducibility in infrastructure deployment.
 
 
 ## Creating AKS Cluster With IaC
 
-To efficiently provision an AKS cluster using Terraform and seamlessly integrate previously defined modules, follow the comprehensive steps outlined below:
+The following steps were taken to efficiently provision an AKS cluster using Terraform and seamlessly integrate previously defined modules:
 
 ### Authentication Setup
-1. **Create Service Principal**: Begin by creating a Service Principal (a dedicated service account used by Terraform to interact with Azure resources securely).
-2. **Define Input Variables**: In the `variables.tf` file, define input variables for the `client_id` and `client_secret`. These variables will store the credentials required for authenticating Terraform with Azure. Mark these variables as sensitive to prevent accidental exposure of sensitive information.
+1. **Creating a Service Principal**: First a Service Principal was created (a dedicated service account used by Terraform to interact with Azure resources securely).
+2. **Defining Input Variables**: In the `variables.tf` file, both the `client_id` and `client_secret` input variables were defined. These variables will store the credentials required for authenticating Terraform with Azure. Mark these variables as sensitive to prevent accidental exposure of sensitive information.
 
 ### Provider Configuration
 1. **Create Main Configuration File**: In the `aks-terraform` directory, create a `main.tf` file.
