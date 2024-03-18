@@ -77,7 +77,7 @@ To store delivery dates for orders, a new column called delivery_date has been i
 1.	Look for the "Delivery Date" field to view the scheduled delivery date for the order.
 
 #### Developers
-Database Interaction<br />
+*Database Interaction*<br />
 When interacting with the backend database, developers should ensure that the delivery_date column is properly handled in SQL queries and data manipulation operations.<br />
 
 ### Conclusion
@@ -133,7 +133,7 @@ This process involves defining input and output variables, configuring Azure res
 ### Configuring Azure Resources
 1. A `main.tf` file was used to input variables to set up AKS cluster resources such as *name*, *location*, *DNS prefix*, and *Kubernetes version*.
 1. Default node pool settings were then defined, including *node count*, *VM size*, and *auto-scaling* parameters.
-1. Lastly, service principal authentication details were specified.<br />
+1. Lastly, the service principal authentication details were specified.<br />
 
 
 ### Defining Output Variables
@@ -151,76 +151,76 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
 
 ### Authentication Setup
 1. **Creating a Service Principal**: First a Service Principal was created (a dedicated service account used by Terraform to interact with Azure resources securely).
-2. **Defining Input Variables**: In the `variables.tf` file, both the `client_id` and `client_secret` input variables were defined. These variables will store the credentials required for authenticating Terraform with Azure. Mark these variables as sensitive to prevent accidental exposure of sensitive information.
+2. **Defining Input Variables**: In the `variables.tf` file, both the `client_id` and `client_secret` input variables were defined. These variables will store the credentials required for authenticating Terraform with Azure. The variables were also marked as sensitive to prevent accidental exposure of sensitive information.
 
 ### Provider Configuration
-1. **Create Main Configuration File**: In the `aks-terraform` directory, create a `main.tf` file.
-2. **Azure Provider Block**: Within `main.tf`, define the Azure provider block to enable authentication with Azure using the service principal credentials variables created previously. Include the required provider configuration details such as `subscription_id` and `tenant_id`.
+1. **Creating Main Configuration File**: In the `aks-terraform` directory,a `main.tf` file was created.
+2. **Azure Provider Block**: Within `main.tf`, the Azure provider block was defined to enable authentication with Azure using the service principal credentials variables created previously. The required provider configuration details such as `subscription_id` and `tenant_id` were included.
 
 ### Integration of Networking Module
-1. **Include Networking Module**: Integrate the networking module into the main configuration file (`main.tf`).
-2. **Define Input Variables**: Set the input variables required by the networking module:
+1. **Including Networking Module**: The networking module was integrated into the `main.tf` configuration file.
+2. **Defining Input Variables**: The input variables required by the networking module were then set:
    - `resource_group_name`: A descriptive name for the Azure Resource Group.
    - `location`: The Azure region where resources will be deployed.
    - `vnet_address_space`: The address space for the Virtual Network (VNet) in CIDR notation.
 
 ### Integration of Cluster Module
-1. **Include Cluster Module**: Integrate the cluster module into the main configuration file.
-2. **Define Input Variables**: Specify the input variables required by the cluster module:
+1. **Including Cluster Module**: The cluster module was integrated into the `main.tf` configuration file.
+2. **Defining Input Variables**: The input variables required by the cluster module were then specified:
    - `aks_cluster_name`: The desired name for the AKS cluster.
    - `cluster_location`: The Azure region where the AKS cluster will be created.
    - `dns_prefix`: The DNS prefix for the AKS cluster, used to create a unique DNS name.
    - `kubernetes_version`: The version of Kubernetes to be used for the AKS cluster.
    - `service_principal_client_id` and `service_principal_secret`: The credentials of the service principal used for AKS cluster authentication.
-   - Use output variables from the networking module (`resource_group_name`, `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `aks_nsg_id`) as input variables for the cluster module.
+   - The output variables from the networking module (`resource_group_name`, `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `aks_nsg_id`) were then used as input variables for the cluster module.
 
-### Terraform Initialization and Application
-1. **Initialize Terraform Project**: Navigate to the main project directory and initialize the Terraform project.
-2. **Apply Terraform Configuration**: Apply the Terraform configuration to initiate the creation of networking resources and the AKS cluster. Ensure to add the resultant state file to `.gitignore` to avoid exposing sensitive information.
+### Terraform Initialisation and Application
+1. **Initialising Terraform Project**: The Terraform project was first initialised in the main project directory.
+2. **Applying Terraform Configuration**: The Terraform configuration was then applied to initiate the creation of networking resources and the AKS cluster. The resultant state file was then added to `.gitignore` to avoid exposing sensitive information.
 
 ### Retrieve Kubeconfig and Test Cluster
-1. **Retrieve Kubeconfig**: After AKS cluster provisioning, retrieve the kubeconfig file to securely connect to the cluster.
-2. **Test Cluster**: Connect to the newly created cluster using the kubeconfig file to verify successful provisioning and operational status.
+1. **Retrieving Kubeconfig**: After provisioning the AKS cluster, the kubeconfig file was retrieved to securely connect to the cluster.
+2. **Testing the Cluster**: The cluster was then connected to using the kubeconfig file to verify successful provisioning and operational status.
 
-By following these steps, you can effectively automate the provisioning of an AKS cluster with Terraform, ensuring reliability and consistency in infrastructure deployment.
+Thus the provisioning of the AKS cluster was effectively automated with Terraform, ensuring reliability and consistency in infrastructure deployment.
 
 ## Kubernetes Deployment to AKS
 
 ### Deployment and Service Manifests
-Deploy the containerised application to a Kubernetes cluster, using Deployment and Service manifests. These manifests are defined as follows:
-- **Deployment Manifest**: Create a file named `application-manifest.yaml` to define the Deployment resource. Key configurations include:
+The containerised application was deployed to a Kubernetes cluster, using Deployment and Service manifests. These manifests were defined as follows:
+- **Deployment Manifest**: Initially a file named `application-manifest.yaml` is created to define the Deployment resource. Key configurations include:
   - `replicas`: Specifies the desired number of pods to run, ensuring scalability and high availability.
   - `selector`: Identifies the pods managed by the Deployment using labels.
   - `containers`: Defines the container image and exposes port 5000 for communication.
   - `strategy`: Implements Rolling Updates to ensure smooth application updates with minimal downtime.
-- **Service Manifest**: Within the same `application-manifest.yaml`, define a Service to facilitate internal communication. Configurations include:
+- **Service Manifest**: Within the same `application-manifest.yaml`, a Service to facilitate internal communication was defined. Configurations include:
   - `selector`: Matches labels of pods created by the Deployment for efficient traffic routing.
   - `ports`: Specifies TCP protocol on port 80 for internal communication within the cluster, targeting port 5000 of the container.
   - `type`: Set to ClusterIP for internal service within the AKS cluster.
 
 ### Deployment Strategy
-Rolling Updates is utilised as the deployment strategy for its benefits:
+Rolling Updates was utilised as the deployment strategy for its benefits:
 - **Gradual Replacement**: Old instances are replaced one at a time for a smooth transition.
 - **Continuous Availability**: The application remains accessible to users throughout the update.
 - **Controlled Rollout**: Operators can control the update rate and monitor progress.
 - **Built-in Health Checks**: Kubernetes ensures new instances are healthy before proceeding with the update.
 
 ### Testing and Validation
-After deployment, we validate the application's functionality and reliability through testing:
-- **Verification**: Confirm the status and details of deployed pods and services.
-- **Port Forwarding**: Initiate port forwarding to a local machine for efficient testing.
-- **Local Access**: Access the application locally at http://127.0.0.1:5000.
-- **Functional Testing**: Test all application features, such as the orders table and Add Order functionality.
+After deployment, the application's functionality and reliability was validated through testing:
+- **Verification**: The status and details of deployed pods and services were confirmed.
+- **Port Forwarding**: Port forwarding to a local machine was initiated for efficient testing.
+- **Local Access**: The application was accessed locally at http://127.0.0.1:5000.
+- **Functional Testing**: All application features were tested, such as the orders table and Add Order functionality.
 
 ### Distribution to Internal Users
-To distribute the application company-wide, consider using Ingress. Ingress controllers allow you to manage more advance routing, domain-based access, and can be a powerful way to manage both internal and external traffic. However, setting up an Ingress involves provisioning a company domain, which can be a complex and costly process and so it is beyond the scope of this project.
+To distribute the application company-wide, consider using Ingress. Ingress controllers allow you to manage more advanced routing, domain-based access, and can be a powerful way to manage both internal and external traffic. However, setting up an Ingress involves provisioning a company domain, which can be a complex and costly process and so it is beyond the scope of this project.
 On the other hand, if the application was customer-facing rather than for internal use, using a Load Balancer service would be the preferred choice. This setup is especially suitable when serving the application to a broader audience, such as a public website or a customer portal.
 
 
 ## CI/CD Pipeline Documentation
 
 ### Overview
-This project repository is configured with a comprehensive CI/CD pipeline using Azure DevOps. The pipeline automates both the containerization and deployment process, ensuring that every new feature added to the project triggers the automatic build of an updated Docker image, its release to Docker Hub, and the deployment of the updated containers to the Kubernetes cluster hosted on Azure Kubernetes Service (AKS).
+This project repository was configured with a comprehensive CI/CD pipeline using Azure DevOps. The pipeline automates both the containerization and deployment process, ensuring that every new feature added to the project triggers the automatic build of an updated Docker image, its release to Docker Hub, and the deployment of the updated containers to the Kubernetes cluster hosted on Azure Kubernetes Service (AKS).
 
 ### Pipeline Configuration Tasks
 The tasks completed to configure the pipeline are as follows:
