@@ -236,8 +236,6 @@ After configuring the CI/CD pipeline, the following validation steps were perfor
 1. **Monitoring Pod Status**: The status of pods within the AKS cluster was monitored using the command `kubectl get pods` to confirm correct creation and deployment.
 2. **Testing Functionality**: Port forwarding was initiated using `kubectl port-forward <pod-name> 5000:5000` to access the application running on AKS securely. The functionality of the application was tested to ensure it operates correctly post-deployment.
 
-# Include screenshots to enhance clarity!!!!!!!!!!!!!!!!!!!!!!!
-
 ## Monitoring Strategy for AKS Cluster
 
 Comprehensive monitoring strategies were implemented to ensure effective monitoring and alerting for the AKS cluster. Below are the details of the strategies:
@@ -249,22 +247,22 @@ Several Metrics Explorer charts are used to monitor the AKS cluster:
 1. **Average Node CPU Usage:**
    - This chart tracks the CPU usage of the AKS cluster's nodes.
    - Significance: Helps ensure efficient resource allocation and detect potential performance issues.
-   - ![Screenshot](insert_screenshot_average_node_cpu_usage.png)
+    ![Average Node CPU Usage Screenshot](screenshots/avg_nodes_CPU_usage.png?raw=true)
 
 2. **Average Pod Count:**
    - Displays the average number of pods running in the AKS cluster.
    - Significance: Key metric for evaluating the cluster's capacity and workload distribution.
-   - ![Screenshot](insert_screenshot_average_pod_count.png)
+   ![Average Pod Count Screenshot](screenshots/avg_pod_count.png?raw=true)
 
 3. **Used Disk Percentage:**
    - Monitors disk usage to prevent storage-related issues.
    - Significance: Tracks how much disk space is being utilised.
-   - ![Screenshot](insert_screenshot_used_disk_percentage.png)
+   ![Used Disk Percentage Screenshot](screenshots/used_disk_percent.png?raw=true)
 
 4. **Bytes Read and Written per Second:**
    - Provides insights into data I/O rates.
    - Significance: Helps identify potential performance bottlenecks.
-   - ![Screenshot](insert_screenshot_bytes_read_written.png)
+   ![Bytes Read and Written per Second Screenshot](screenshots/bytes_r&w_ps.png?raw=true)
 
 ### Log Analytics
 Various logs are analysed through Log Analytics:
@@ -272,17 +270,30 @@ Various logs are analysed through Log Analytics:
 1. **Average Node CPU Usage Percentage per Minute**
    - Significance: Tracks the CPU usage percentage at the node level over time. Monitoring CPU usage at a granular level helps detect performance anomalies, identify resource-intensive workloads, and optimise resource allocation. High CPU usage may indicate workload spikes, inefficient resource utilisation, or performance bottlenecks.
 
+#### Each row in the result section represents the average node CPU usage within a one-minute time bin.
+![Average Node CPU Usage Percentage per Minute Screenshot](screenshots/avg_node_CPU_usage_percent_pm.png?raw=true)
+
 2. **Average Node Memory Usage Percentage per Minute**
    - Significance: Monitors the memory usage percentage at the node level over time. Tracking memory usage helps identify memory-intensive applications or workloads, detect memory leaks, and optimise memory allocation. High memory usage may lead to performance degradation, out-of-memory errors, or application crashes.
+
+#### Each row in the result section represents the average node memory usage within a one-minute time bin.
+![Average Node Memory Usage Percentage per Minute Screenshot](screenshots/avg_nodes_mem.png?raw=true)
 
 3. **Pods Counts with Phase**
    - Significance: Provides information on the pod count with different phases (e.g., pending, running, terminating). Monitoring pod lifecycle phases helps ensure the smooth operation of workloads, and identify stuck or pending pods. Anomalies in pod counts may indicate deployment failures, resource constraints, or scheduling issues.
 
+#### Each row in the result section represents the count number of pods in various phases.
+![Pods Counts with Phase Screenshot](screenshots/pod_count_w_phase.png?raw=true)
+
 4. **Find Warning Value in Container Logs**
    - Significance: Searches for `warning` values in container logs to proactively detect issues or errors within containers. Monitoring container logs helps identify application errors, runtime issues, or misconfigurations, enabling prompt troubleshooting and issue resolution. Detecting warning messages helps mitigate potential service disruptions, data corruption, or application failures.
+   - Each row in the result section would represent an instance where the specific keyword 'warning' was found in the container logs.
 
 5. **Monitoring Kubernetes Events**
    - Significance: Tracks Kubernetes events related to pod scheduling, scaling activities, and errors. Monitoring Kubernetes events provides insights into cluster operations, identifies infrastructure changes, and helps maintain cluster stability and reliability. Monitoring events helps detect and respond to pod failures, node issues, or configuration changes, ensuring continuous operation and optimal performance of the AKS cluster.
+
+#### Each row in the result section represents an instance where specific Kubernetes events were found in the container logs.
+![Monitoring Kubernetes Events Screenshot](screenshots/kubernetes_events.png?raw=true)
 
 ### Alarm Configurations
 Alarm rules are provisioned to trigger alerts:
@@ -345,6 +356,11 @@ To enhance security and adhere to best practices, the project repository impleme
 8. **Deployment:**
    - The modified application was deployed using the pre-established Azure DevOps CI/CD pipeline.
    - End-to-end testing was conducted within the AKS environment to validate the functionality of the application, ensuring secure access to Key Vault secrets directly from the CI/CD pipeline.
+
+## UML Diagram Showing The Architecture Of The Pipeline
+
+![UML Diagram Showing The Architecture Of The Pipeline](screenshots/UML_diagram.png?raw=true)
+
 
 
 ## Contributors 
