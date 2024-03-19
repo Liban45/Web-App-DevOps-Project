@@ -236,8 +236,6 @@ After configuring the CI/CD pipeline, the following validation steps were perfor
 1. **Monitoring Pod Status**: The status of pods within the AKS cluster was monitored using the command `kubectl get pods` to confirm correct creation and deployment.
 2. **Testing Functionality**: Port forwarding was initiated using `kubectl port-forward <pod-name> 5000:5000` to access the application running on AKS securely. The functionality of the application was tested to ensure it operates correctly post-deployment.
 
-# Include screenshots to enhance clarity!!!!!!!!!!!!!!!!!!!!!!!
-
 ## Monitoring Strategy for AKS Cluster
 
 Comprehensive monitoring strategies were implemented to ensure effective monitoring and alerting for the AKS cluster. Below are the details of the strategies:
@@ -249,22 +247,22 @@ Several Metrics Explorer charts are used to monitor the AKS cluster:
 1. **Average Node CPU Usage:**
    - This chart tracks the CPU usage of the AKS cluster's nodes.
    - Significance: Helps ensure efficient resource allocation and detect potential performance issues.
-   - ![Screenshot](insert_screenshot_average_node_cpu_usage.png)
+    ![Average Node CPU Usage Screenshot](screenshots/avg_nodes_CPU_usage.png?raw=true)
 
 2. **Average Pod Count:**
    - Displays the average number of pods running in the AKS cluster.
    - Significance: Key metric for evaluating the cluster's capacity and workload distribution.
-   - ![Screenshot](insert_screenshot_average_pod_count.png)
+   ![Average Pod Count Screenshot](screenshots/avg_pod_count.png?raw=true)
 
 3. **Used Disk Percentage:**
    - Monitors disk usage to prevent storage-related issues.
    - Significance: Tracks how much disk space is being utilised.
-   - ![Screenshot](insert_screenshot_used_disk_percentage.png)
+   ![Used Disk Percentage Screenshot](screenshots/used_disk_percent.png?raw=true)
 
 4. **Bytes Read and Written per Second:**
    - Provides insights into data I/O rates.
    - Significance: Helps identify potential performance bottlenecks.
-   - ![Screenshot](insert_screenshot_bytes_read_written.png)
+   ![Bytes Read and Written per Second Screenshot](screenshots/bytes_r&w_ps.png?raw=true)
 
 ### Log Analytics
 Various logs are analysed through Log Analytics:
@@ -348,7 +346,7 @@ To enhance security and adhere to best practices, the project repository impleme
 
 ## UML Diagram Showing The Architecture Of The Pipeline
 
-![UML Diagram Showing The Architecture Of The Pipeline](UML_diagram.png?raw=true)
+![UML Diagram Showing The Architecture Of The Pipeline](screenshots/UML_diagram.png?raw=true)
 
 
 
