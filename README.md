@@ -346,8 +346,8 @@ To enhance security and adhere to best practices, the project repository impleme
    - The modified application was deployed using the pre-established Azure DevOps CI/CD pipeline.
    - End-to-end testing was conducted within the AKS environment to validate the functionality of the application, ensuring secure access to Key Vault secrets directly from the CI/CD pipeline.
 
-![Alt text](/../screenshots/Web-App-DevOps-Project/UML_diagram.png?raw=true "UML Diagram Showing The Architecture of this Pipeline")
-
+![cdscd](Web-App-DevOps-Project/UML_diagram.png)
+![Alt text](/../screenshots/liban45/Web-App-DevOps-Project/UML_diagram.png?raw=true "Optional Title")
 
 
 
