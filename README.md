@@ -1,16 +1,45 @@
 # Web-App-DevOps-Project
 
-Welcome to the Web App DevOps Project repo! This application allows you to efficiently manage and track orders for a potential business. It provides an intuitive user interface for viewing existing orders and adding new ones.
+Welcome to the Web App DevOps Project repo! This application allows you to efficiently manage and track orders for a potential business. It provides an intuitive user interface for viewing existing orders and adding new ones.<br />
+I have taken this project a step further by implementing a comprehensive CI/CD pipeline to ensure smooth deployment and scalability in a real-world setting. By integrating Continuous Integration and Continuous Deployment (CI/CD) practices into this Flask application, I've streamlined the development process, ensuring that every code change undergoes testing and is automatically deployed to production.
 
 ## Table of Contents
 
+- [Pipeline Architecture](#architecture-of-the-pipeline)
 - [Features](#features)
-- [Getting Started](#getting-started)
-- [Technology Stack](#technology-stack)
+- [Web Application](#web-application)
+- [GIT](#git)
+- [Docker](#docker)
+- [Terraform](#infrastructure-as-code-terraform)
 - [Contributors](#contributors)
 - [License](#license)
 
+## Architecture Of The Pipeline
+
+The diagram below illustrates the proposed architecture of the CI/CD pipeline.
+
+![UML Diagram Showing The Architecture Of The Pipeline](screenshots/UML_diagram.png?raw=true)
+
 ## Features
+
+- Web Application
+- GIT:
+- Terraform:
+- Docker:
+- Azure: To host my infrastructure
+
+## Web Application
+
+### Prerequisites
+
+For the application to successfully run, you need to install the following packages:
+
+- flask (version 2.2.2)
+- pyodbc (version 4.0.39)
+- SQLAlchemy (version 2.0.21)
+- werkzeug (version 2.2.3)
+
+### Web Features
 
 - **Order List:** View a comprehensive list of orders including details like date UUID, user ID, card number, store code, product code, product quantity, order date, and shipping date.
   
@@ -26,26 +55,19 @@ Welcome to the Web App DevOps Project repo! This application allows you to effic
 
 - **Data Validation:** Ensure data accuracy and completeness with required fields, date restrictions, and card number validation.
 
-## Getting Started
+### Web Application Usage
 
-### Prerequisites
-
-For the application to successfully run, you need to install the following packages:
-
-- flask (version 2.2.2)
-- pyodbc (version 4.0.39)
-- SQLAlchemy (version 2.0.21)
-- werkzeug (version 2.2.3)
-
-### Usage
-
-To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at `http://127.0.0.1:5000`. Here you will be met with the following two pages:
+To run the application, you simply need to run the `app.py` script in this repository. Once the application starts you should be able to access it locally at 
+```sh
+http://127.0.0.1:5000
+```
+Here you will be met with the following two pages:
 
 1. **Order List Page:** Navigate to the "Order List" page to view all existing orders. Use the pagination controls to navigate between pages.
 
 2. **Add New Order Page:** Click on the "Add New Order" tab to access the order form. Complete all required fields and ensure that your entries meet the specified criteria.
 
-## Technology Stack
+### Web Application Technology Stack
 
 - **Backend:** Flask is used to build the backend of the application, handling routing, data processing, and interactions with the database.
 
@@ -53,61 +75,78 @@ To run the application, you simply need to run the `app.py` script in this repos
 
 - **Database:** The application employs an Azure SQL Database as its database system to store order-related data.
 
- ## New 'Delivery Date' Feature
+## GIT 
+### New 'Delivery Date' Feature
 
-### Overview
+#### Overview
 The delivery date feature is a new functionality added to the company's internal application. This feature allows the addition of a new field in the delivery tracking software. Although the feature has been reverted for the time being, its functionality is documented here for potential future implementation.
 
-### Purpose
+#### Purpose
 The delivery date function is intended to improve delivery management within the company's internal application in terms of accuracy and efficiency. Delivery dates can be added to the tracking system to help users better plan and track order fulfilment, leading to improved customer satisfaction and operational effectiveness.
 
-### Backend Integration
+#### Git and GitHub
+Here's a summary of how Git and GitHub were utilized to successfully develope, integrate, and later revert the new delivery date feature, ensuring efficient collaboration and version control throughout the process:
+1. **Cloning the Repository**<br />
+To facilitate working on the repository locally, the forked repository was cloned onto the local machine.
+1. **Creating an Issue**<br />
+An issue was created on the forked GitHub repository to track the development of the new feature, specifically adding a delivery_date column to the backend Azure SQL Database.
+1. **Branching for Feature Development**<br />
+While on the main branch in the cloned repository locally a new branch named feature/add-delivery-date was created to isolate the code changes necessary for including the delivery_date column.
+1. **Code Changes and Committing**<br />
+After the required code changes were made they are then pushed to the remote repository, including a meaningful commit message for clear identification by team members.
+1. **Pull Request Creation**<br />
+Then a pull request was submitted to merge the code changes from the feature/add-delivery-date branch into the main branch, thereby integrating the new feature into the web application functionality.
+1. **Review and Merging**<br />
+After ensuring the changes adhered to feature specifications. Any necessary changes were addressed before merging the changes from the feature/add-delivery-date branch into the main branch.
+1. **Reverting the Changes**<br />
+To leverage version control capabilities of GIT initally a new branch named revert-delivery-date based on the main branch was created. The specific commit hash to revert was identified 
+Reverted the specific commit using:
+```sh
+git revert COMMIT_HASH.
+```
+Lastly, the changes were pushed to the remote branch. A pull request was then created to merge the revert branch into main and approved and merged the PR to revert the changes, removing the delivery_date     column from the backend database.
+
+
+#### Backend Integration
 To store delivery dates for orders, a new column called delivery_date has been incorporated in the backend Azure SQL Database.
-
-### Usage
-#### End Users
-*Adding a Delivery Date to an Order*
-1.	Navigate to the Add New Order page within the application.
-1.	Fill in the necessary order details, including product information and customer details.
-1.	Locate the "Delivery Date" field and select or enter the desired delivery date.
-1.	Complete the order creation by pressing ‘Add Order’.<br />
-
-*Viewing Delivery Date for an Order*
-1.	Navigate to the Order List page within the application.
-1.	Look for the "Delivery Date" field to view the scheduled delivery date for the order.
-
-#### Developers
-*Database Interaction*<br />
 When interacting with the backend database, developers should ensure that the delivery_date column is properly handled in SQL queries and data manipulation operations.<br />
 
-### Conclusion
-The delivery date feature enhances the company's internal application by allowing users to track and manage delivery dates for orders efficiently. By following the outlined guidelines, both end users and developers can leverage this functionality effectively to streamline order fulfilment processes and improve overall operational efficiency.
-
-## Containerisation With Docker<br />
+## Docker
 ### Containerisation Process
 1.	Initially, a `Dockerfile` was created, and then an official Python runtime was chosen as the parent image. `Python:3.8-slim` is utilised for this application since it's a good choice for a Flask application.
 1.	Next the working directory was set to `/app` using the `WORKDIR` instruction, as it is a commonly used directory for web applications.
 1.	The `COPY` instruction was then used to copy the contents of the local directory into the container's `/app` directory. This ensures the files and application code are available inside the container.
 1.	Following on, the system dependencies and the ODBC driver required for database connectivity need to be installed. Furthermore, the package lists also have to be updated and installed using `apt-get update` followed by `apt-get install`. The Microsoft GPG key and repository have to then be downloaded and added to install the MS SQL Server ODBC driver. Finally, clean up unnecessary files `apt-get purge`, `apt-get clean`.
-1.	Pip is then needed to upgrade pip and setuptools to their latest versions. To ensure that the latest versions of these tools are available for installing Python packages.
 1.	 The Python packages specified in the `requirements.txt` file need to be installed next. This file should contain all the packages necessary for running the application successfully.
 1.	To make the Flask application accessible from outside the container, `port 5000` should be exposed.
 1.	Finally the `CMD` instruction is used to specify the command that runs the file, which then starts the Flask application when the container launches.
 
 ### Docker Commands
-1.	Firstly the Docker image is built by running the following command: `docker build -t {name of the image} .`.
-1.	Then, the Docker container was run locally to ensure the application functions correctly within the containerised environment. This is done using the following command: `docker run -p 5000:5000 {name of the image}`. This maps port 5000 from the local machine to the container, enabling access to the containerised application through the web browser at `http://127.0.0.1:5000`.
-1.	Next the Docker image is tagged with the relevant information. Specifying the image name, version, and Docker Hub repository in the following format: `docker tag {name of the image} {docker-hub-username}/{image-name}:{tag}`
-1.	Then the docker push command was used to upload the Docker image to Docker Hub: `docker push {docker-hub-username}/{image-name}:{tag}`
-1.	Lastly, the Docker Hub account was used to confirm that the Docker image is listed within the repository. Then the accessibility was tested by pulling the image from Docker Hub.
+1.	Firstly the Docker image is built by running the following command:
+```sh
+docker build -t {name of the image} .
+```
+2.	Then, the Docker container was run locally to ensure the application functions correctly within the containerised environment. This is done using the following command:
+```sh
+docker run -p 5000:5000 {name of the image}
+```
+This maps port 5000 from the local machine to the container, enabling access to the containerised application through the web browser at 
+```sh
+http://127.0.0.1:5000
+```
+3.	Next the Docker image is tagged with the relevant information. Specifying the image name, version, and Docker Hub repository in the following format:
+```sh
+docker tag {name of the image} {docker-hub-username}/{image-name}:{tag}
+```
+4.	Then the docker push command was used to upload the Docker image to Docker Hub:
+```sh
+docker push {docker-hub-username}/{image-name}:{tag}
+```
+5.	Lastly, the Docker Hub account was used to confirm that the Docker image is listed within the repository. Then the accessibility was tested by pulling the image from Docker Hub.
 
-### Docker Image Information
+## Infrastructure as Code (Terraform)
 
-Name: liban45/test-web-app
-
-Tags: latest
-
-## Defining Networking Services With IaC.
+## Networking Services.
 This documentation outlines the process of defining networking services using Infrastructure as Code (IaC) with Terraform. This is done to deploy a containerised application on a Kubernetes cluster (to ensure the application's scalability). The focus will be on provisioning Azure networking services for the Azure Kubernetes Service (AKS) cluster. 
 
 1. **Initialising the Terraform project** with the name `aks-terraform`. The project was organised into two modules: `networking-module` and `aks-cluster-module`.
@@ -120,7 +159,7 @@ This documentation outlines the process of defining networking services using In
 ### Dependencies
 Dependencies ensure that resources are provisioned in the right order within the networking module. The *Azure Resource Group* (RG) is the parent resource,  whereas the *Virtual Network* (VNet) depends on the *RG* for deployment location. As both the *Control Plane* and *Worker Node Subnets* are sub-resources they depend on the *VNet*. The *Network Security Group* (NSG) relies on the *RG* for deployment location and implicitly on the creation of *subnets* within the *VNet*. The *NSG's* presence is a requirement for *NSG Inbound Rules*. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
 
-## Provisioning an Azure Kubernetes Service (AKS) cluster with IaC.
+## Azure Kubernetes Service (AKS)
 
 This process involves defining input and output variables, configuring Azure resources, and initialising the cluster module for use within the main project.
 
@@ -145,7 +184,7 @@ The `aks-cluster-module` directory was then initialised for use within the main 
 These steps ensured the AKS clusters automated provisioning using Terraform, promoting consistency and reproducibility in infrastructure deployment.
 
 
-## Creating AKS Cluster With IaC
+## AKS Cluster With IaC
 
 The following steps were taken to efficiently provision an AKS cluster using Terraform and seamlessly integrate previously defined modules:
 
@@ -209,6 +248,9 @@ Rolling Updates was utilised as the deployment strategy for its benefits:
 After deployment, the application's functionality and reliability was validated through testing:
 - **Verification**: The status and details of deployed pods and services were confirmed.
 - **Port Forwarding**: Port forwarding to a local machine was initiated for efficient testing.
+```sh
+kubectl port-forward [pod-name] 5000:5000
+```
 - **Local Access**: The application was accessed locally at http://127.0.0.1:5000.
 - **Functional Testing**: All application features were tested, such as the orders table and Add Order functionality.
 
