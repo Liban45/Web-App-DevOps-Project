@@ -150,8 +150,16 @@ docker push {docker-hub-username}/{image-name}:{tag}
 This documentation outlines the process of defining networking services using Infrastructure as Code (IaC) with Terraform. This is done to deploy a containerised application on a Kubernetes cluster (to ensure the application's scalability). The focus will be on provisioning Azure networking services for the Azure Kubernetes Service (AKS) cluster. 
 
 1. **Initialising the Terraform project** with the name `aks-terraform`. The project was organised into two modules: `networking-module` and `aks-cluster-module`.
-1. **Defining input variables**: inside the `networking-module` directory, a `variables.tf` file was created to define input variables for the module. These variables include *resource_group_name*, *location*, and *vnet_address_space*.
-1. **Defining Networking Resources**: In the `networking-module` directory, a `main.tf` file was created to define essential networking resources. These resources include *Azure Resource Group*, *Virtual Network* (VNet), *Control Plane Subnet*, *Worker Node Subnet*, and *Network Security Group* (NSG).
+1. **Defining input variables**: inside the `networking-module` directory, a `variables.tf` file was created to define input variables for the module. These variables include:
+   - `resource_group_name`: The desired name for the resource group which is a container that holds related resources for an Azure solution.
+   - `location`:The Azure region where resources will be deployed.
+   - `vnet_address_space`: The address space for the Virtual Network (VNet) in CIDR notation.
+1. **Defining Networking Resources**: In the `networking-module` directory, a `main.tf` file was created to define essential networking resources. These resources include:
+   - `Azure Resource Group`:
+   - `Virtual Network`: A logically isolated network that allows you to organize and control communication between Azure resources.
+   - `Control Plane Subnet`: 
+   - `Worker Node Subnet`: 
+   - `Network Security Group (NSG)`: acts as a virtual firewall for controlling network traffic to and from Azure resources. NSGs enable you to define security rules that determine which traffic is allowed or denied.
 1. **Defining NSG Inbound Rules**: Rules were then added to the *Network Security Group* to allow traffic to *kube-apiserver* and *SSH* from the public IP address. These rules are crucial for the successful provisioning of the AKS cluster and ensuring its security.
 1. **Defining Output Variables**: An `outputs.tf` file was then created to define output variables for the networking module. These variables include *vnet_id*, *control_plane_subnet_id*, *worker_node_subnet_id*, *networking_resource_group_name*, and *aks_nsg_id*.
 1. **Initialising the Networking Module**: Lastly, the terraform initialisation command was run in the `networking-module`. This initialises the networking module, making it ready for use within the main project.
