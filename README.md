@@ -165,7 +165,7 @@ This documentation outlines the process of defining networking services using In
 1. **Initialising the Networking Module**: Lastly, the terraform initialisation command was run in the `networking-module`. This initialises the networking module, making it ready for use within the main project.
 
 ### Dependencies
-Dependencies ensure that resources are provisioned in the right order within the networking module. The *Azure Resource Group* (RG) is the parent resource,  whereas the *Virtual Network* (VNet) depends on the *RG* for deployment location. As both the *Control Plane* and *Worker Node Subnets* are sub-resources they depend on the *VNet*. The *Network Security Group* (NSG) relies on the *RG* for deployment location and implicitly on the creation of *subnets* within the *VNet*. The *NSG's* presence is a requirement for *NSG Inbound Rules*. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
+Dependencies ensure that resources are provisioned in the right order within the networking module. The *Azure Resource Group* (RG) is the parent resource,  whereas the *Virtual Network* (VNet) depends on the *RG* for deployment location. As both the *Control Plane* and *Worker Node Subnets* are sub-resources, they depend on the *VNet*. The *Network Security Group* (NSG) relies on the *RG* for deployment location and implicitly on the creation of *subnets* within the *VNet*. The *NSG's* presence is a requirement for *NSG Inbound Rules*. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
 
 ## Azure Kubernetes Service (AKS)
 
@@ -173,19 +173,22 @@ This process involves defining input and output variables, configuring Azure res
 
 ### Defining Input Variables 
 1. A `variables.tf` file was created in the `aks-cluster-module` directory. 
-1. Input variables were then defined for AKS cluster customisation, including
-`Name`: 
-`Location`:
-`DNS prefix`:
-`Kubernetes version`:
-`Service principal ID`:
-`Secret`:
+1. Input variables were then defined for AKS cluster customisation:
+   - `Name`: Specifies the name of the AKS cluster.
+   - `Location`: Defines the Azure region where the AKS cluster will be created.
+   - `DNS Prefix`: Sets the DN.S prefix for the AKS cluster, which is used to create a unique DNS name for the cluster.
+   - `Kubernetes Version`: Specifies the version of Kubernetes to be used for the AKS cluster.
+   - `Service Principal ID`: The Client ID of the service principal used for authenticating and managing the AKS cluster.
+   - `Service Principal Secret`: The Client Secret associated with the service principal used for AKS cluster authentication.
 1. The output variables from the networking module were included as the `networking-module` plays an important role in establishing the networking resources for the AKS cluster. 
 1. A unique Service Principal name was used to prevent permission conflicts.
 
 ### Configuring Azure Resources
 1. A `main.tf` file was used to input variables to set up AKS cluster resources such as *name*, *location*, *DNS prefix*, and *Kubernetes version*.
-1. Default node pool settings were then defined, including *node count*, *VM size*, and *auto-scaling* parameters.
+1. Default node pool settings were then defined:
+   - `node count`:
+   - `VM size`:
+   - `auto-scaling* parameters`:
 1. Lastly, the service principal authentication details were specified.<br />
 
 
@@ -198,7 +201,7 @@ The `aks-cluster-module` directory was then initialised for use within the main 
 These steps ensured the AKS clusters automated provisioning using Terraform, promoting consistency and reproducibility in infrastructure deployment.
 
 
-## AKS Cluster With IaC
+## Creating AKS Cluster With IaC
 
 The following steps were taken to efficiently provision an AKS cluster using Terraform and seamlessly integrate previously defined modules:
 
@@ -208,7 +211,9 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
 
 ### Provider Configuration
 1. **Creating Main Configuration File**: In the `aks-terraform` directory, a `main.tf` file was created.
-2. **Azure Provider Block**: Within `main.tf`, the Azure provider block was defined to enable authentication with Azure using the service principal credentials variables created previously. The required provider configuration details such as `subscription_id` and `tenant_id` were included.
+2. **Azure Provider Block**: Within `main.tf`, the Azure provider block was defined to enable authentication with Azure using the service principal credentials variables created previously. Required provider configuration details were included such as:
+   - `subscription_id`:
+   - `tenant_id`:
 
 ### Integration of Networking Module
 1. **Including Networking Module**: The networking module was integrated into the `main.tf` configuration file.
@@ -219,21 +224,29 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
 
 ### Integration of Cluster Module
 1. **Including Cluster Module**: The cluster module was integrated into the `main.tf` configuration file.
-2. **Defining Input Variables**: The input variables required by the cluster module were then specified:
-   - `aks_cluster_name`: The desired name for the AKS cluster.
-   - `cluster_location`: The Azure region where the AKS cluster will be created.
-   - `dns_prefix`: The DNS prefix for the AKS cluster, used to create a unique DNS name.
-   - `kubernetes_version`: The version of Kubernetes to be used for the AKS cluster.
-   - `service_principal_client_id` and `service_principal_secret`: The credentials of the service principal used for AKS cluster authentication.
-   - The output variables from the networking module (`resource_group_name`, `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `aks_nsg_id`) were then used as input variables for the cluster module.
+1. **Defining Input Variables**: The input variables required by the cluster module (`aks_cluster_name`, `cluster_location`, `dns_prefix`, `kubernetes_version`, `service_principal_client_id` and `service_principal_secret`) were then specified. The output variables from the networking module (`resource_group_name`, `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `aks_nsg_id`) were then used as input variables for the cluster module.
 
 ### Terraform Initialisation and Application
 1. **Initialising Terraform Project**: The Terraform project was first initialised in the main project directory.
-2. **Applying Terraform Configuration**: The Terraform configuration was then applied to initiate the creation of networking resources and the AKS cluster. The resultant state file was then added to `.gitignore` to avoid exposing sensitive information.
+   ```sh
+   terraform init
+   ```
+2. **Applying Terraform Configuration**: The Terraform configuration was then applied to initiate the creation of networking resources and the AKS cluster. The resultant state file was added to `.gitignore` to avoid exposing sensitive information.
+   ```sh
+   terraform apply
+   ```
 
 ### Retrieve Kubeconfig and Test Cluster
 1. **Retrieving Kubeconfig**: After provisioning the AKS cluster, the kubeconfig file was retrieved to securely connect to the cluster.
-2. **Testing the Cluster**: The cluster was then connected to using the kubeconfig file to verify successful provisioning and operational status.
+# include the commands used to get it**
+   ```sh
+az aks get-credentials --resource-group [resource_group_name] --name [aks_cluster_name]
+   ```
+# explain about context
+   ```sh
+kubectl config current-context
+   ```
+3. **Testing the Cluster**: The cluster was then connected to using the kubeconfig file to verify successful provisioning and operational status.
 
 Thus the provisioning of the AKS cluster was effectively automated with Terraform, ensuring reliability and consistency in infrastructure deployment.
 
@@ -269,7 +282,7 @@ kubectl port-forward [pod-name] 5000:5000
 - **Functional Testing**: All application features were tested, such as the orders table and Add Order functionality.
 
 ### Distribution to Internal Users
-To distribute the application company-wide, consider using Ingress. Ingress controllers allow you to manage more advanced routing, domain-based access, and can be a powerful way to manage both internal and external traffic. However, setting up an Ingress involves provisioning a company domain, which can be a complex and costly process and so it is beyond the scope of this project.
+To distribute the application company-wide, consider using Ingress. Ingress controllers allow you to manage more advanced routing, domain-based access, and can be a powerful way to manage both internal and external traffic. However, setting up an Ingress involves provisioning a company domain, which can be a complex and costly process and so it is beyond the scope of this project.<br />
 On the other hand, if the application was customer-facing rather than for internal use, using a Load Balancer service would be the preferred choice. This setup is especially suitable when serving the application to a broader audience, such as a public website or a customer portal.
 
 
