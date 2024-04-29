@@ -11,6 +11,13 @@ I have taken this project a step further by implementing a comprehensive CI/CD p
 - [GIT](#git)
 - [Docker](#docker)
 - [Terraform](#infrastructure-as-code-terraform)
+  - [Networking Services](#networking-services)
+  - [Azure Kubernetes Service](#azure-kubernetes-service-aks)
+  - [Creating AKS Cluster](#creating-aks-cluster-with-iac)
+- [Kubernetes Deployment](#kubernetes-deployment-to-aks)
+- [CI/CD Pipeline](#cicd-pipeline-documentation)
+- [Monitoring Strategy](#monitoring-strategy-for-aks-cluster)
+- [Secrets Management](#secrets-management-and-aks-integration-with-azure-key-vault)
 - [Contributors](#contributors)
 - [License](#license)
 
@@ -146,7 +153,7 @@ docker push {docker-hub-username}/{image-name}:{tag}
 
 ## Infrastructure as Code (Terraform)
 
-## Networking Services.
+### Networking Services.
 This documentation outlines the process of defining networking services using Infrastructure as Code (IaC) with Terraform. This is done to deploy a containerised application on a Kubernetes cluster (to ensure the application's scalability). The focus will be on provisioning Azure networking services for the Azure Kubernetes Service (AKS) cluster. 
 
 1. **Initialising the Terraform project** with the name `aks-terraform`. The project was organised into two modules: `networking-module` and `aks-cluster-module`.
@@ -164,14 +171,14 @@ This documentation outlines the process of defining networking services using In
 1. **Defining Output Variables**: An `outputs.tf` file was then created to define output variables for the networking module. These variables include *vnet_id*, *control_plane_subnet_id*, *worker_node_subnet_id*, *networking_resource_group_name*, and *aks_nsg_id*.
 1. **Initialising the Networking Module**: Lastly, the terraform initialisation command was run in the `networking-module`. This initialises the networking module, making it ready for use within the main project.
 
-### Dependencies
+#### Dependencies
 Dependencies ensure that resources are provisioned in the right order within the networking module. The *Azure Resource Group* (RG) is the parent resource,  whereas the *Virtual Network* (VNet) depends on the *RG* for deployment location. As both the *Control Plane* and *Worker Node Subnets* are sub-resources, they depend on the *VNet*. The *Network Security Group* (NSG) relies on the *RG* for deployment location and implicitly on the creation of *subnets* within the *VNet*. The *NSG's* presence is a requirement for *NSG Inbound Rules*. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
 
-## Azure Kubernetes Service (AKS)
+### Azure Kubernetes Service (AKS)
 
 This process involves defining input and output variables, configuring Azure resources, and initialising the cluster module for use within the main project.
 
-### Defining Input Variables 
+#### Defining Input Variables 
 1. A `variables.tf` file was created in the `aks-cluster-module` directory. 
 1. Input variables were then defined for AKS cluster customisation:
    - `Name`: Specifies the name of the AKS cluster.
@@ -183,7 +190,7 @@ This process involves defining input and output variables, configuring Azure res
 1. The output variables from the networking module were included as the `networking-module` plays an important role in establishing the networking resources for the AKS cluster. 
 1. A unique Service Principal name was used to prevent permission conflicts.
 
-### Configuring Azure Resources
+#### Configuring Azure Resources
 1. A `main.tf` file was used to input variables to set up AKS cluster resources such as *name*, *location*, *DNS prefix*, and *Kubernetes version*.
 1. Default node pool settings were then defined:
    - `node count`:
@@ -192,41 +199,41 @@ This process involves defining input and output variables, configuring Azure res
 1. Lastly, the service principal authentication details were specified.<br />
 
 
-### Defining Output Variables
+#### Defining Output Variables
 In an `outputs.tf` file output variables were defined to store *cluster name*, *ID*, and *Kubernetes configuration file*.
 
-### Initialising Cluster Module
+#### Initialising Cluster Module
 The `aks-cluster-module` directory was then initialised for use within the main project.
 
 These steps ensured the AKS clusters automated provisioning using Terraform, promoting consistency and reproducibility in infrastructure deployment.
 
 
-## Creating AKS Cluster With IaC
+### Creating AKS Cluster With IaC
 
 The following steps were taken to efficiently provision an AKS cluster using Terraform and seamlessly integrate previously defined modules:
 
-### Authentication Setup
+#### Authentication Setup
 1. **Creating a Service Principal**: First a Service Principal was created (a dedicated service account used by Terraform to interact with Azure resources securely).
 2. **Defining Input Variables**: In the `variables.tf` file, both the `client_id` and `client_secret` input variables were defined. These variables will store the credentials required for authenticating Terraform with Azure. The variables were also marked as sensitive to prevent accidental exposure of sensitive information.
 
-### Provider Configuration
+#### Provider Configuration
 1. **Creating Main Configuration File**: In the `aks-terraform` directory, a `main.tf` file was created.
 2. **Azure Provider Block**: Within `main.tf`, the Azure provider block was defined to enable authentication with Azure using the service principal credentials variables created previously. Required provider configuration details were included such as:
    - `subscription_id`:
    - `tenant_id`:
 
-### Integration of Networking Module
+#### Integration of Networking Module
 1. **Including Networking Module**: The networking module was integrated into the `main.tf` configuration file.
 2. **Defining Input Variables**: The input variables required by the networking module were then set:
    - `resource_group_name`: A descriptive name for the Azure Resource Group.
    - `location`: The Azure region where resources will be deployed.
    - `vnet_address_space`: The address space for the Virtual Network (VNet) in CIDR notation.
 
-### Integration of Cluster Module
+#### Integration of Cluster Module
 1. **Including Cluster Module**: The cluster module was integrated into the `main.tf` configuration file.
 1. **Defining Input Variables**: The input variables required by the cluster module (`aks_cluster_name`, `cluster_location`, `dns_prefix`, `kubernetes_version`, `service_principal_client_id` and `service_principal_secret`) were then specified. The output variables from the networking module (`resource_group_name`, `vnet_id`, `control_plane_subnet_id`, `worker_node_subnet_id`, `aks_nsg_id`) were then used as input variables for the cluster module.
 
-### Terraform Initialisation and Application
+#### Terraform Initialisation and Application
 1. **Initialising Terraform Project**: The Terraform project was first initialised in the main project directory.
    ```sh
    terraform init
@@ -236,7 +243,7 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
    terraform apply
    ```
 
-### Retrieve Kubeconfig and Test Cluster
+#### Retrieve Kubeconfig and Test Cluster
 1. **Retrieving Kubeconfig**: After provisioning the AKS cluster, the kubeconfig file was retrieved to securely connect to the cluster.
 # include the commands used to get it**
    ```sh
@@ -302,9 +309,14 @@ The tasks completed to configure the pipeline are as follows:
 7. **Testing and Validation**: The functionality of the CI/CD pipeline was tested by monitoring pod status and testing application functionality post-deployment.
 ### Validation Steps
 After configuring the CI/CD pipeline, the following validation steps were performed:
-1. **Monitoring Pod Status**: The status of pods within the AKS cluster was monitored using the command `kubectl get pods` to confirm correct creation and deployment.
-2. **Testing Functionality**: Port forwarding was initiated using `kubectl port-forward <pod-name> 5000:5000` to access the application running on AKS securely. The functionality of the application was tested to ensure it operates correctly post-deployment.
-
+1. **Monitoring Pod Status**: The status of pods within the AKS cluster was monitored to confirm correct creation and deployment.
+```sh
+kubectl get pods
+```
+1. **Testing Functionality**: The functionality of the application was tested to ensure it operates correctly post-deployment. This was done using port forwarding to access the application running on AKS securely. 
+```sh
+kubectl port-forward [pod-name] 5000:5000
+```
 ## Monitoring Strategy for AKS Cluster
 
 Comprehensive monitoring strategies were implemented to ensure effective monitoring and alerting for the AKS cluster. Below are the details of the strategies:
@@ -425,12 +437,6 @@ To enhance security and adhere to best practices, the project repository impleme
 8. **Deployment:**
    - The modified application was deployed using the pre-established Azure DevOps CI/CD pipeline.
    - End-to-end testing was conducted within the AKS environment to validate the functionality of the application, ensuring secure access to Key Vault secrets directly from the CI/CD pipeline.
-
-## UML Diagram Showing The Architecture Of The Pipeline
-
-![UML Diagram Showing The Architecture Of The Pipeline](screenshots/UML_diagram.png?raw=true)
-
-
 
 ## Contributors 
 
