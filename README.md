@@ -155,10 +155,10 @@ This documentation outlines the process of defining networking services using In
    - `location`:The Azure region where resources will be deployed.
    - `vnet_address_space`: The address space for the Virtual Network (VNet) in CIDR notation.
 1. **Defining Networking Resources**: In the `networking-module` directory, a `main.tf` file was created to define essential networking resources. These resources include:
-   - `Azure Resource Group`:
+   - `Azure Resource Group`: A logical container for grouping related Azure resources.
    - `Virtual Network`: A logically isolated network that allows you to organize and control communication between Azure resources.
-   - `Control Plane Subnet`: 
-   - `Worker Node Subnet`: 
+   - `Control Plane Subnet`: A subnet within the Azure VNet that is dedicated to hosting the control plane components of an AKS cluster.
+   - `Worker Node Subnet`: Another subnet within the Azure VNet, it serves as the network space for hosting the worker nodes of the AKS cluster.
    - `Network Security Group (NSG)`: acts as a virtual firewall for controlling network traffic to and from Azure resources. NSGs enable you to define security rules that determine which traffic is allowed or denied.
 1. **Defining NSG Inbound Rules**: Rules were then added to the *Network Security Group* to allow traffic to *kube-apiserver* and *SSH* from the public IP address. These rules are crucial for the successful provisioning of the AKS cluster and ensuring its security.
 1. **Defining Output Variables**: An `outputs.tf` file was then created to define output variables for the networking module. These variables include *vnet_id*, *control_plane_subnet_id*, *worker_node_subnet_id*, *networking_resource_group_name*, and *aks_nsg_id*.
@@ -172,8 +172,14 @@ Dependencies ensure that resources are provisioned in the right order within the
 This process involves defining input and output variables, configuring Azure resources, and initialising the cluster module for use within the main project.
 
 ### Defining Input Variables 
-1. A `variables.tf` file was first created in the `aks-cluster-module` directory. 
-1. Input variables were then defined for AKS cluster customisation, including *name*, *location*, *DNS prefix*, *Kubernetes version*, *service principal ID* and *secret*. 
+1. A `variables.tf` file was created in the `aks-cluster-module` directory. 
+1. Input variables were then defined for AKS cluster customisation, including
+`Name`: 
+`Location`:
+`DNS prefix`:
+`Kubernetes version`:
+`Service principal ID`:
+`Secret`:
 1. The output variables from the networking module were included as the `networking-module` plays an important role in establishing the networking resources for the AKS cluster. 
 1. A unique Service Principal name was used to prevent permission conflicts.
 
