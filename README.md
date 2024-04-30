@@ -172,7 +172,11 @@ This documentation outlines the process of defining networking services using In
 1. **Initialising the Networking Module**: Lastly, the terraform initialisation command was run in the `networking-module`. This initialises the networking module, making it ready for use within the main project.
 
 #### Dependencies
-Dependencies ensure that resources are provisioned in the right order within the networking module. The *Azure Resource Group* (RG) is the parent resource,  whereas the *Virtual Network* (VNet) depends on the *RG* for deployment location. As both the *Control Plane* and *Worker Node Subnets* are sub-resources, they depend on the *VNet*. The *Network Security Group* (NSG) relies on the *RG* for deployment location and implicitly on the creation of *subnets* within the *VNet*. The *NSG's* presence is a requirement for *NSG Inbound Rules*. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
+Dependencies ensure that resources are provisioned in the right order within the networking module. 
+- The **Azure Resource Group** (RG) is the parent resource,  whereas the **Virtual Network** (VNet) depends on the **RG** for deployment location. 
+- Both the **Control Plane** and **Worker Node Subnets** are sub-resources, they depend on the **VNet**.
+- The **Network Security Group** (NSG) relies on the **RG** for deployment location and implicitly on the creation of **subnets** within the **VNet**.
+- The **NSG's** presence is a requirement for **NSG Inbound Rules**. These requirements guarantee consecutive provisioning, which is necessary for the AKS cluster's networking services to be configured correctly.
 
 ### Azure Kubernetes Service (AKS)
 
@@ -193,9 +197,9 @@ This process involves defining input and output variables, configuring Azure res
 #### Configuring Azure Resources
 1. A `main.tf` file was used to input variables to set up AKS cluster resources such as *name*, *location*, *DNS prefix*, and *Kubernetes version*.
 1. Default node pool settings were then defined:
-   - `node count`:
-   - `VM size`:
-   - `auto-scaling* parameters`:
+   - `node count`: Sets the initial number of nodes in the node pool (to 1).
+   - `VM size`: Specifies the virtual machine size for the nodes in the pool, which is Standard_DS2_v2.
+   - `auto-scaling* parameters`: Firstly, enabling auto-scaling for the node pool with the minimum number of nodes at 1 and the maximum number of nodes at 3.
 1. Lastly, the service principal authentication details were specified.<br />
 
 
@@ -238,7 +242,11 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
    ```sh
    terraform init
    ```
-2. **Applying Terraform Configuration**: The Terraform configuration was then applied to initiate the creation of networking resources and the AKS cluster. The resultant state file was added to `.gitignore` to avoid exposing sensitive information.
+1. **Preview Changes to Terraform Configuration**: Before applying the changes a quick review was done to ensure the proposed modifications aligned with  expectations
+   ```sh
+   terraform plan
+   ```  
+1. **Applying Terraform Configuration**: The Terraform configuration was then applied to initiate the creation of networking resources and the AKS cluster. The resultant state file was added to `.gitignore` to avoid exposing sensitive information.
    ```sh
    terraform apply
    ```
@@ -290,6 +298,7 @@ kubectl port-forward [pod-name] 5000:5000
 
 ### Distribution to Internal Users
 To distribute the application company-wide, consider using Ingress. Ingress controllers allow you to manage more advanced routing, domain-based access, and can be a powerful way to manage both internal and external traffic. However, setting up an Ingress involves provisioning a company domain, which can be a complex and costly process and so it is beyond the scope of this project.<br />
+
 On the other hand, if the application was customer-facing rather than for internal use, using a Load Balancer service would be the preferred choice. This setup is especially suitable when serving the application to a broader audience, such as a public website or a customer portal.
 
 
