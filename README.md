@@ -34,6 +34,8 @@ The diagram below illustrates the proposed architecture of the CI/CD pipeline.
 - Terraform:
 - Docker:
 - Azure: To host my infrastructure
+- Azure Devops:
+- 
 
 ## Web Application
 
@@ -222,9 +224,9 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
 
 #### Provider Configuration
 1. **Creating Main Configuration File**: In the `aks-terraform` directory, a `main.tf` file was created.
-2. **Azure Provider Block**: Within `main.tf`, the Azure provider block was defined to enable authentication with Azure using the service principal credentials variables created previously. Required provider configuration details were included such as:
-   - `subscription_id`:
-   - `tenant_id`:
+2. **Azure Provider Block**: Within `main.tf`, the Azure provider block was defined to enable authentication with Azure using the service principal credentials variables created previously. Required provider configuration details were included:
+   - `subscription_id`:  A unique alphanumeric string that identifies your Azure subscription
+   - `tenant_id`: Identifies which Azure AD instance the application sits under, so Azure knows where to look when a request is made using that applicaiton ID.
 
 #### Integration of Networking Module
 1. **Including Networking Module**: The networking module was integrated into the `main.tf` configuration file.
@@ -253,15 +255,18 @@ The following steps were taken to efficiently provision an AKS cluster using Ter
 
 #### Retrieve Kubeconfig and Test Cluster
 1. **Retrieving Kubeconfig**: After provisioning the AKS cluster, the kubeconfig file was retrieved to securely connect to the cluster.
-# include the commands used to get it**
+
    ```sh
-az aks get-credentials --resource-group [resource_group_name] --name [aks_cluster_name]
+   az aks get-credentials --resource-group [resource_group_name] --name [aks_cluster_name]
    ```
-# explain about context
+   
+- A Kubernetes context is a group of access parameters that define which cluster you're interacting with, which user you're using, and which namespace you're working in. The command below is used to find the currently active context:
+
    ```sh
-kubectl config current-context
+   kubectl config current-context
    ```
-3. **Testing the Cluster**: The cluster was then connected to using the kubeconfig file to verify successful provisioning and operational status.
+
+2. **Testing the Cluster**: The cluster was then connected to using the kubeconfig file to verify successful provisioning and operational status.
 
 Thus the provisioning of the AKS cluster was effectively automated with Terraform, ensuring reliability and consistency in infrastructure deployment.
 
@@ -421,13 +426,22 @@ To enhance security and adhere to best practices, the project repository impleme
 
 4. **Managed Identity for AKS:**
    - Managed identity was enabled for the AKS cluster to allow secure authentication and interaction with the Key Vault.
-   - Azure CLI commands were used to enable managed identity for the AKS cluster and retrieve information about the created managed identity such as `clientId` under identityProfile.
-   - Commands include: `az aks update --resource-group <resource-group> --name <aks-cluster-name> --enable-managed-identity` & `az aks show --resource-group <resource-group> --name <aks-cluster-name> --query identityProfile`
+   - Azure CLI commands were used to enable managed identity for the AKS cluster and retrieve information about the created managed identity such as `clientId` under identityProfile:
+    ```sh
+      az aks update --resource-group <resource-group> --name <aks-cluster-name> --enable-managed-identity
+    ```
+    ```sh
+      az aks show --resource-group <resource-group> --name <aks-cluster-name> --query identityProfile
+    ```
 
 5. **Role-Based Access Control (RBAC):**
-   - The Key Vault Secrets Officer role is assigned to the managed identity associated with AKS using the `az role assignment create --role "Key Vault Secrets Officer" \ 
---assignee <managed-identity-client-id> \
---scope /subscriptions/{subscription-id}/resourceGroups/{resource-group}/providers/Microsoft.KeyVault/vaults/{key-vault-name}` command.
+   - The Key Vault Secrets Officer role is assigned to the managed identity associated with AKS using the command below:
+   ```sh
+   az role assignment create --role "Key Vault Secrets Officer" \ 
+   --assignee <managed-identity-client-id> \
+    --scope /subscriptions/{subscription-id}/resourceGroups/{resource-group}/providers/Microsoft.KeyVault/vaults/{key-vault-name}
+   ```
+
    - This role grants permissions to read, list, set, and delete secrets within the specified Azure Key Vault, enabling AKS to securely retrieve and manage secrets.
 
 ### Application Code Modifications
