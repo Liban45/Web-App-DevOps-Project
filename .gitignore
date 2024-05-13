@@ -5,5 +5,3 @@ aks-terraform\terraform.tfstate
 aks-terraform\terraform.tfstate.backup
 *.terraform/
 *terraform.tfstate
-aks-terraform/aks-cluster-module/.terraform.lock.hcl
-aks-terraform/networking-module/.terraform.lock.hcl
