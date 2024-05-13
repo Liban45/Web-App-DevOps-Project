@@ -6,7 +6,6 @@ I have taken this project a step further by implementing a comprehensive CI/CD p
 ## Table of Contents
 
 - [Pipeline Architecture](#architecture-of-the-pipeline)
-- [Features](#features)
 - [Web Application](#web-application)
 - [GIT](#git)
 - [Docker](#docker)
@@ -26,16 +25,6 @@ I have taken this project a step further by implementing a comprehensive CI/CD p
 The diagram below illustrates the proposed architecture of the CI/CD pipeline.
 
 ![UML Diagram Showing The Architecture Of The Pipeline](screenshots/UML_diagram.png?raw=true)
-
-## Features
-
-- Web Application
-- GIT:
-- Terraform:
-- Docker:
-- Azure: To host my infrastructure
-- Azure Devops:
-- 
 
 ## Web Application
 
