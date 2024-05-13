@@ -54,7 +54,7 @@ resource "azurerm_network_security_rule" "kube_apiserver" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "443"
-  source_address_prefix       = "77.98.31.167"  
+  source_address_prefix       ="77.98.31.167"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.aks_networking.name
   network_security_group_name = azurerm_network_security_group.aks-nsg.name
@@ -69,7 +69,7 @@ resource "azurerm_network_security_rule" "ssh" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "22"
-  source_address_prefix       = "77.98.31.167"  
+  source_address_prefix       = "77.98.31.167" 
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.aks_networking.name
   network_security_group_name = azurerm_network_security_group.aks-nsg.name
